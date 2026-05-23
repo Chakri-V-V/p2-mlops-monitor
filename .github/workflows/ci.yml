@@ -1,0 +1,40 @@
+name: CI — MLOps Monitor
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Lint
+        run: |
+          pip install flake8
+          flake8 model/ monitoring/ api/ tests/ --max-line-length=100 --ignore=E501,W503
+      - name: Train model + generate data
+        run: |
+          python model/train.py
+          python model/simulate_drift.py
+      - name: Run monitoring scripts
+        run: |
+          python monitoring/drift_check.py
+          python monitoring/performance_estimate.py
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t p2-mlops-monitor:ci .

@@ -1,0 +1,12 @@
+{
+  "features": [
+    "age",
+    "limit_bal",
+    "pay_delay",
+    "bill_amt",
+    "pay_amt",
+    "education"
+  ],
+  "roc_auc": 0.9749,
+  "default_rate": 0.525
+}
