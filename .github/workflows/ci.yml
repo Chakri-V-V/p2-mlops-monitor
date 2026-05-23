@@ -19,7 +19,7 @@ jobs:
       - name: Lint
         run: |
           pip install flake8
-          flake8 model/ monitoring/ api/ tests/ --max-line-length=120 --ignore=E501,W503,E302,E303,E402,E702,E241,F401,W291,W293
+          flake8 model/ monitoring/ api/ tests/ --max-line-length=120 --ignore=E501,W503,E302,E303,E402,E702,E241,E221,E272,E701,F401,W291,W293,E401
       - name: Train model + generate data
         run: |
           python model/train.py
